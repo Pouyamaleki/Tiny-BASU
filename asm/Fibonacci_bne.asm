@@ -1,6 +1,6 @@
 li rx6, 1                     # rx6 = 1
 li rx1, 1                     # rx1 = 1
-lui rx0, 0                    # rx0 = 0
+                              #lui rx0, 0 we dont need this line beacuse rx0 is already equal to 0
 addi rx2, rx0, 20             # rx2 = 20
 addi rx3, rx0, 2              # rx3 = 2
 
