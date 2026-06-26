@@ -1,6 +1,5 @@
 li rx6, 1                       # rx6 = 1 (Fibonacci number F0)
-li rx1, 1                       # rx1 = 1 (Fibonacci number F1)
-                                # lui rx0, 0 this line is not necessery 
+li rx1, 1                       # rx1 = 1 (Fibonacci number F1) 
 addi rx2, rx0, 20               # rx2 = 20 (number of iterations)
 addi rx3, rx0, 2                # rx3 = 2 (counter)
 
@@ -13,4 +12,3 @@ loop:
     jmp loop                      # Branch to last instruction
 
 end: 
-                                # add rx4, rx0, rx1 this line is not necessery too
