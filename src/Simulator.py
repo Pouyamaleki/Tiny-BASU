@@ -16,16 +16,16 @@ class TinyBASU_Simulator:
         self.num_correct_predictions = 0
         self.num_taken_branches = 0
         
-        # متد پیش‌بینی (مثلاً 'ST', 'SN', 'D1', 'D2', 'IQ')
+        # Prediction methods
         self.prediction_method = prediction_method
-        # جدول پیش‌بینی پرش (BPT)
+        # BPT
         self.BPT = {}
-        # دیکشنری برای نگهداری لیبل‌های برنامه
+        # Dictionary to save the program labels
         self.labels = {}
 
-    # ---------- بخش اسمبلر (تبدیل کد اسمبلی به باینری) ----------
+    # assembler
     def parse_register(self, token):
-        """تبدیل 'rx6' به عدد ۶"""
+        """Turn rx6 to number 6"""
         if token.startswith('rx'):
             return int(token[2:])
         return None
