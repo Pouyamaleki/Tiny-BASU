@@ -2,7 +2,7 @@ import sys
 
 class TinyBASU_Simulator:
     def __init__(self, prediction_method):
-        # ثبات‌ها (۸ تا، ۱۶ بیتی)
+        # registers (8 to 16 bits)
         self.regs = [0] * 8
         # حافظه (۵۱۲ خانه، ۱۶ بیتی)
         self.memory = [0] * 512
