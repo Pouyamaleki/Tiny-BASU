@@ -1,4 +1,5 @@
 import sys
+import time
 
 class TinyBASU_Simulator:
     def __init__(self, prediction_method):
