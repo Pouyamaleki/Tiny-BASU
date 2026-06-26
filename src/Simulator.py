@@ -398,7 +398,7 @@ class TinyBASU_Simulator:
         speedup = baseline_cycles / self.num_cycles if self.num_cycles > 0 else 1
 
         with open(report_file, 'w', encoding='utf-8') as f:
-            f.write("Simulation report of TinyBASU\n")
+            f.write("****************Simulation report of TinyBASU**************\n")
             f.write(f"Prediction Method: {self.prediction_method}\n")
             f.write(f"Number of Cycles {self.num_cycles}\n")
             f.write(f"Number of Executed commands: {self.num_instructions}\n")
@@ -407,7 +407,7 @@ class TinyBASU_Simulator:
             f.write(f"Number of jumps: {self.num_branches}\n")
             f.write(f"Prediction precision: {accuracy:.2f}%\n")
             f.write(f"Acceleration: {speedup:.4f}x\n")
-            f.write("\nFinall Registers:\n")
+            f.write("\n**********************Finall Registers********************\n")
             for i in range(8):
                 f.write(f"r{i}: {self.regs[i]:04X} ({self.regs[i]})\n")
             f.write(f"PC: {self.pc}\n")
