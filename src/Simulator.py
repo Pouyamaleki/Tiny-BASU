@@ -74,7 +74,7 @@ class TinyBASU_Simulator:
             mnemonic = tokens[0]
             operands = tokens[1:]
 
-            # مقداردهی اولیه برای فیلدهای دستور
+            # initializaztion
             opcode = 0
             rd = 0
             rs = 0
@@ -82,7 +82,7 @@ class TinyBASU_Simulator:
             imm = 0
             func = 0
 
-            # ---- تشخیص نوع دستور و پر کردن فیلدها ----
+            # check the orders ti find out what are they
             if mnemonic == 'add':
                 opcode = 0
                 func = 1
@@ -105,7 +105,7 @@ class TinyBASU_Simulator:
                 opcode = 1
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x7  # 3 بیت
+                imm = int(operands[2]) & 0x7  # three bits
             elif mnemonic == 'li':
                 opcode = 2
                 rd = self.parse_register(operands[0])
@@ -126,11 +126,11 @@ class TinyBASU_Simulator:
                 imm = int(operands[2]) & 0x7
             elif mnemonic == 'beq':
                 opcode = 10
-                rd = self.parse_register(operands[0])  # در واقع rt
+                rd = self.parse_register(operands[0])  # rt
                 rs = self.parse_register(operands[1])
                 label = operands[2]
                 offset = self.labels[label] - address
-                imm = offset & 0x7  # 3 بیت کم‌تر
+                imm = offset & 0x7  # 3 bits less
             elif mnemonic == 'bne':
                 opcode = 11
                 rd = self.parse_register(operands[0])
@@ -142,8 +142,8 @@ class TinyBASU_Simulator:
                 opcode = 14
                 label = operands[0]
                 offset = self.labels[label] - address
-                # آفست ۱۲ بیتی رو به ۴ بخش ۳ بیتی تقسیم کن
-                full_imm = offset & 0xFFF  # 12 بیت
+                # turn 12 bits offset to 3 , 4 bits
+                full_imm = offset & 0xFFF  # 12 bits
                 rd = (full_imm >> 9) & 0x7
                 rs = (full_imm >> 6) & 0x7
                 rt = (full_imm >> 3) & 0x7
@@ -158,7 +158,7 @@ class TinyBASU_Simulator:
                 rt = (full_imm >> 3) & 0x7
                 imm = full_imm & 0x7
             else:
-                raise ValueError(f"دستور ناشناخته: {mnemonic}")
+                raise ValueError(f"Unknown Command: {mnemonic}")
 
             # ساخت کد ماشین ۱۶ بیتی
             instr = (opcode << 12) | (rd << 9) | (rs << 6) | (rt << 3) | imm
