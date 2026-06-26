@@ -23,6 +23,8 @@ class TinyBASU_Simulator:
         self.BPT = {}
         # Dictionary to save the program labels
         self.labels = {}
+        self.wall_time = 0
+        self.num_assembly_instr = 0
 
     # assembler
     def parse_register(self, token):
@@ -178,6 +180,8 @@ class TinyBASU_Simulator:
             if address >= 256:
                 break
 
+        self.num_assembly_instr = address
+
     # initializing the memory
     def init_memory(self, inst_file, data_file):
         # assemble the command file
@@ -304,6 +308,7 @@ class TinyBASU_Simulator:
 
     # simulation main loop
     def simulate(self, timeout):
+        start = time.time()
         while True:
             if self.num_cycles > timeout:
                 print(f"Timeout! Cycles exceeded {timeout}.")
@@ -389,16 +394,20 @@ class TinyBASU_Simulator:
             self.num_cycles += 1
             self.num_instructions += 1
 
+        self.wall_time = time.time() - start
+
     # make the reports
     def report(self, report_file):
         ipc = self.num_instructions / self.num_cycles if self.num_cycles > 0 else 0
         accuracy = (self.num_correct_predictions / self.num_branches * 100) if self.num_branches > 0 else 0
         # Accesleration compared to the stats without prediction
-        baseline_cycles = self.num_instructions + (self.num_taken_branches * 3)
+        baseline_cycles = self.num_instructions + (self.num_branches * 3)
         speedup = baseline_cycles / self.num_cycles if self.num_cycles > 0 else 1
 
         with open(report_file, 'w', encoding='utf-8') as f:
             f.write("****************Simulation report of TinyBASU**************\n")
+            f.write(f"Simulator runtime: {self.wall_time:.4f} seconds\n")
+            f.write(f"Number of Assembly Instructions: {self.num_assembly_instr}\n")
             f.write(f"Prediction Method: {self.prediction_method}\n")
             f.write(f"Number of Cycles {self.num_cycles}\n")
             f.write(f"Number of Executed commands: {self.num_instructions}\n")
