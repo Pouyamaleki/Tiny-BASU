@@ -48,7 +48,7 @@ for asm_file, base_name in programs:
         # Build the command line instruction
         # Format: python main.py [timeout] [method] [inst_file] [data_file] [report_file]
         cmd = (
-            f"python main.py "
+            f"python ../main.py ..."
             f"{TIMEOUT_CYCLES} "
             f"{method} "
             f"{ASM_FOLDER}/{asm_file} "
