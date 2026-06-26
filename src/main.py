@@ -4,7 +4,7 @@ from simulator import TinyBASU_Simulator
 def main():
     if len(sys.argv) != 6:
         print("Usage: python main.py timeout_cycles prediction_method inst_file data_file report_file")
-        print("مثال: python main.py 1000 ST asm/fibo_bne.asm data.txt reports/fibo_bne_st.txt")
+        print("Example: python main.py 1000 ST asm/fibo_bne.asm data.txt Reports/fibo_bne_st.txt")
         return
 
     timeout_cycles = int(sys.argv[1])
@@ -17,7 +17,7 @@ def main():
     sim.init_memory(inst_file, data_file)
     sim.simulate(timeout_cycles)
     sim.report(report_file)
-    print(f"✅ گزارش با موفقیت در {report_file} ذخیره شد.")
+    print(f"Report successfully saved to {report_file}.")
 
 if __name__ == "__main__":
     main()
