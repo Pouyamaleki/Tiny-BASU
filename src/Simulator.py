@@ -41,10 +41,14 @@ class TinyBASU_Simulator:
             clean = line.strip()
             if not clean or clean.startswith('#'):
                 continue
+             # Remove inline comments
+            if '#' in clean:
+                clean = clean.split('#')[0].strip()
+                if not clean:
+                    continue
             if ':' in clean:
                 label = clean.split(':')[0].strip()
                 self.labels[label] = address
-                # check the part after the label
                 parts = clean.split(':', 1)
                 if len(parts) > 1 and parts[1].strip():
                     address += 1
@@ -57,7 +61,11 @@ class TinyBASU_Simulator:
             clean = line.strip()
             if not clean or clean.startswith('#'):
                 continue
-            
+            # Remove inline comments
+            if '#' in clean:
+                clean = clean.split('#')[0].strip()
+                if not clean:
+                    continue
             # remove the label
             if ':' in clean:
                 parts = clean.split(':', 1)
