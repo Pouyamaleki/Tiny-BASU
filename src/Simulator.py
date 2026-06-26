@@ -6,7 +6,7 @@ class TinyBASU_Simulator:
         self.regs = [0] * 8
         # memory
         self.memory = [0] * 512
-        # شمارنده برنامه
+        # Program Counter
         self.pc = 0
         # آمار عملکرد
         self.num_cycles = 0
