@@ -31,11 +31,11 @@ class TinyBASU_Simulator:
         return None
 
     def assemble_file(self, inst_file):
-        """دو مرحله‌ای: لیبل‌ها رو پیدا کن، سپس دستورات رو اسمبل کن"""
+        """First find labels and then assemble them"""
         with open(inst_file, 'r') as f:
             lines = f.readlines()
 
-        # ----- مرحله ۱: پیدا کردن لیبل‌ها -----
+        # Finding the labels
         address = 0
         for line in lines:
             clean = line.strip()
@@ -44,29 +44,28 @@ class TinyBASU_Simulator:
             if ':' in clean:
                 label = clean.split(':')[0].strip()
                 self.labels[label] = address
-                # بعد از لیبل، ممکنه دستور هم باشه (مثل 'loop: add ...')
+                # check the part after the label
                 parts = clean.split(':', 1)
                 if len(parts) > 1 and parts[1].strip():
                     address += 1
             else:
                 address += 1
 
-        # ----- مرحله ۲: اسمبل کردن دستورات و پر کردن حافظه -----
+        # assemble the syntax
         address = 0
         for line in lines:
             clean = line.strip()
             if not clean or clean.startswith('#'):
                 continue
             
-            # حذف لیبل از ابتدای خط (اگه وجود داشته باشه)
+            # remove the label
             if ':' in clean:
                 parts = clean.split(':', 1)
                 clean = parts[1].strip()
                 if not clean:
                     continue
             
-            # تجزیه دستور
-            # جایگزین کاما با فاصله برای راحت split کردن
+            # Syntax analysis
             clean = clean.replace(',', ' ')
             tokens = clean.split()
             if not tokens:
