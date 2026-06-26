@@ -1,4 +1,4 @@
-li rx6, 1                       # rx0 = 1 (Fibonacci number F0)
+li rx6, 1                       # rx6 = 1 (Fibonacci number F0)
 li rx1, 1                       # rx1 = 1 (Fibonacci number F1)
                                 # lui rx0, 0 this line is not necessery 
 addi rx2, rx0, 20               # rx2 = 20 (number of iterations)
@@ -10,7 +10,7 @@ loop:
     addi rx1, rx4, 0            # rx1 = rx4
     addi rx3, rx3, 1            # Increment the counter
     beq rx3, rx2, end           # Branch to last instruction
-    j loop                      # Branch to last instruction
+    jmp loop                      # Branch to last instruction
 
 end: 
-    add rx4, rx0, rx1           # Store the 20th Fibonacci number in register rx4
+                                # add rx4, rx0, rx1 this line is not necessery too
