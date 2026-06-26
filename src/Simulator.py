@@ -113,39 +113,39 @@ class TinyBASU_Simulator:
                 opcode = 1
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x7  # three bits
+                imm = int(operands[2]) & 0x3F  # six bits
             elif mnemonic == 'li':
                 opcode = 2
                 rd = self.parse_register(operands[0])
-                imm = int(operands[1]) & 0x7
+                imm = int(operands[1]) & 0x3F
             elif mnemonic == 'lui':
                 opcode = 3
                 rd = self.parse_register(operands[0])
-                imm = int(operands[1]) & 0x7
+                imm = int(operands[1]) & 0x3F
             elif mnemonic == 'lw':
                 opcode = 4
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x7
+                imm = int(operands[2]) & 0x3F
             elif mnemonic == 'sw':
                 opcode = 5
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x7
+                imm = int(operands[2]) & 0x3F
             elif mnemonic == 'beq':
                 opcode = 10
                 rd = self.parse_register(operands[0])  # rt
                 rs = self.parse_register(operands[1])
                 label = operands[2]
                 offset = self.labels[label] - address
-                imm = offset & 0x7  # 3 bits less
+                imm = offset & 0x3F  # 6 bits
             elif mnemonic == 'bne':
                 opcode = 11
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 label = operands[2]
                 offset = self.labels[label] - address
-                imm = offset & 0x7
+                imm = offset & 0x3F
             elif mnemonic == 'jmp':
                 opcode = 14
                 label = operands[0]
@@ -209,7 +209,10 @@ class TinyBASU_Simulator:
         rd = (instr >> 9) & 0x7
         rs = (instr >> 6) & 0x7
         rt = (instr >> 3) & 0x7
-        imm = instr & 0x7
+        if opcode == 0 or opcode == 14 or opcode == 15:  # R-type and J-type
+            imm = instr & 0x7
+        else:  # I-type: 6-bit immediate
+            imm = instr & 0x3F
         return opcode, rd, rs, rt, imm
 
     # expantion for the signed numbers
@@ -229,19 +232,19 @@ class TinyBASU_Simulator:
             elif func == 4:  # slt
                 self.regs[rd] = 1 if self.regs[rs] < self.regs[rt] else 0
         elif opcode == 1:  # addi
-            imm_s = self.sign_extend(imm, 3)
+            imm_s = self.sign_extend(imm, 6)
             self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
         elif opcode == 2:  # li
-            self.regs[rd] = self.sign_extend(imm, 3)
+            self.regs[rd] = self.sign_extend(imm, 6)
         elif opcode == 3:  # lui
-            self.regs[rd] = (imm << 8) & 0xFFFF
+            self.regs[rd] = (imm << 10) & 0xFFFF
         elif opcode == 4:  # lw
-            imm_s = self.sign_extend(imm, 3)
+            imm_s = self.sign_extend(imm, 6)
             addr = (self.regs[rs] + imm_s) & 0xFFFF
             if 256 <= addr <= 511:
                 self.regs[rd] = self.memory[addr]
         elif opcode == 5:  # sw
-            imm_s = self.sign_extend(imm, 3)
+            imm_s = self.sign_extend(imm, 6)
             addr = (self.regs[rs] + imm_s) & 0xFFFF
             if 256 <= addr <= 511:
                 self.memory[addr] = self.regs[rd]
@@ -323,7 +326,7 @@ class TinyBASU_Simulator:
             # target address for the jump
             target = None
             if opcode == 10 or opcode == 11:
-                imm_s = self.sign_extend(imm, 3)
+                imm_s = self.sign_extend(imm, 6)
                 target = pc_fetch + imm_s
             elif opcode == 14 or opcode == 15:
                 # 12 bits offset
@@ -354,20 +357,16 @@ class TinyBASU_Simulator:
             # jump and wrong prediction managment
             if opcode == 10 or opcode == 11:
                 self.num_branches += 1
-                # 3 cycle for every jump
                 if actual_taken:
-                    self.num_stalls += 3
-                    self.num_cycles += 3
                     self.num_taken_branches += 1
                 
                 # PC Correction
                 if predicted_taken != actual_taken:
-                    if not actual_taken:
-                        self.num_stalls += 3
-                        self.num_cycles += 3
+                    self.num_stalls += 3
+                    self.num_cycles += 3
                     # correct the pc
                     if actual_taken:
-                        imm_s = self.sign_extend(imm, 3)
+                        imm_s = self.sign_extend(imm, 6)
                         self.pc = pc_fetch + imm_s
                     else:
                         self.pc = pc_fetch + 1
