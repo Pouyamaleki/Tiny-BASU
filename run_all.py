@@ -1,4 +1,4 @@
-#this code is Written by the AI for the easier excution!!!!!!!!
+# This code is Written by the AI for easier execution !!!!!!!!
 
 import os
 import subprocess
@@ -7,69 +7,78 @@ import subprocess
 # Configuration Section
 # ==================================================
 
-# Simulation parameters
-TIMEOUT_CYCLES = "10000"        # Maximum cycles to prevent infinite loops
-DATA_FILE = "data.txt"          # Data memory file (can be empty)
+TIMEOUT_CYCLES = "10000"
+DATA_FILE = "data.txt"
+
+# Base directory: where this script (run_all.py) is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Possible locations for main.py (in order of priority)
+POSSIBLE_MAIN_PATHS = [
+    os.path.join(BASE_DIR, "main.py"),        # same folder
+    os.path.join(BASE_DIR, "src", "main.py"), # inside src folder
+]
+
+# Find main.py automatically
+MAIN_SCRIPT = None
+for path in POSSIBLE_MAIN_PATHS:
+    if os.path.exists(path):
+        MAIN_SCRIPT = path
+        break
+
+if MAIN_SCRIPT is None:
+    print("❌ Error: main.py not found in any expected location!")
+    print(f"   Searched in: {POSSIBLE_MAIN_PATHS}")
+    exit(1)
 
 # Folder paths
-ASM_FOLDER = "asm"              # Folder containing assembly files
-REPORTS_FOLDER = "Reports"      # Folder to save the output reports
+ASM_FOLDER = os.path.join(BASE_DIR, "asm")
+REPORTS_FOLDER = os.path.join(BASE_DIR, "Reports")
 
-# List of assembly programs to test
-# Format: (assembly_filename, base_name_for_report)
+# Programs and methods
 programs = [
     ("fibo_bne.asm", "fibo_bne"),
     ("fibo_beq.asm", "fibo_beq"),
     ("fact.asm", "fact")
 ]
 
-# List of branch prediction methods to evaluate
 methods = ["ST", "SN", "D1", "D2", "IQ"]
 
 # ==================================================
 # Execution Loop
 # ==================================================
 
-# Ensure the reports folder exists (optional, but safe)
 if not os.path.exists(REPORTS_FOLDER):
     os.makedirs(REPORTS_FOLDER)
     print(f"📁 Created folder: {REPORTS_FOLDER}")
 
 print("🚀 Starting the batch simulation for all programs...\n")
+print(f"📍 Using main.py from: {MAIN_SCRIPT}\n")
 
-# Loop through each program
 for asm_file, base_name in programs:
-    # Loop through each prediction method
     for method in methods:
-        # Construct the report file name (e.g., fibo_bne_st.txt)
-        # The project specification requires lowercase method names in the file
-        report_file = f"{REPORTS_FOLDER}/{base_name}_{method.lower()}.txt"
-        
-        # Build the command line instruction
-        # Format: python main.py [timeout] [method] [inst_file] [data_file] [report_file]
-        cmd = (
-            f"python ../main.py ..."
-            f"{TIMEOUT_CYCLES} "
-            f"{method} "
-            f"{ASM_FOLDER}/{asm_file} "
-            f"{DATA_FILE} "
-            f"{report_file}"
-        )
-        
-        # Print the command being executed (for tracking progress)
-        print(f"⏳ Executing: {cmd}")
-        
-        # Run the command and wait for it to finish
-        # Using subprocess.call gives better control than os.system
-        exit_code = subprocess.call(cmd, shell=True)
-        
-        # Check if the command executed successfully
+        report_file = os.path.join(REPORTS_FOLDER, f"{base_name}_{method.lower()}.txt")
+        asm_path = os.path.join(ASM_FOLDER, asm_file)
+
+        cmd = [
+            "python",
+            MAIN_SCRIPT,
+            TIMEOUT_CYCLES,
+            method,
+            asm_path,
+            DATA_FILE,
+            report_file
+        ]
+
+        print(f"⏳ Executing: {' '.join(cmd)}")
+        exit_code = subprocess.call(cmd, shell=False)
+
         if exit_code == 0:
             print(f"✅ Successfully generated: {report_file}")
         else:
             print(f"❌ Error occurred while generating: {report_file}")
-        
-        print("-" * 60)  # Separator line for readability
+
+        print("-" * 60)
 
 print("\n🎉 All 15 reports have been generated successfully!")
 print(f"📂 Check the '{REPORTS_FOLDER}' folder for the results.")
