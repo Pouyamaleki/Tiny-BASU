@@ -160,33 +160,33 @@ class TinyBASU_Simulator:
             else:
                 raise ValueError(f"Unknown Command: {mnemonic}")
 
-            # ساخت کد ماشین ۱۶ بیتی
+            # make 16 bits machine code
             instr = (opcode << 12) | (rd << 9) | (rs << 6) | (rt << 3) | imm
             self.memory[address] = instr
             address += 1
 
-            # اگه حافظه دستورات پر شد (۲۵۶ خانه)، متوقف کن
+            # stop the program when the memory is full
             if address >= 256:
                 break
 
-    # ---------- مقداردهی اولیه حافظه ----------
+    # initializing the memory
     def init_memory(self, inst_file, data_file):
-        # اسمبل کردن فایل دستورات
+        # assemble the command file
         self.assemble_file(inst_file)
         
-        # بارگذاری فایل داده (از آدرس ۲۵۶ به بعد)
+        # upload the data file
         try:
             with open(data_file, 'r') as f:
                 lines = f.readlines()
             for i, line in enumerate(lines):
                 line = line.strip()
                 if line:
-                    val = int(line, 16)  # اعداد هگزادسیمال
+                    val = int(line, 16)  # hexadecimal numbers
                     self.memory[256 + i] = val
         except FileNotFoundError:
-            pass  # اگه فایل داده وجود نداشت، نادیده بگیر
+            pass  # ignore if the data file doesn't exist
 
-    # ---------- گرفتن دستور از حافظه ----------
+    # read the commands
     def fetch(self):
         if self.pc < 0 or self.pc >= 512:
             return None, None
@@ -195,7 +195,7 @@ class TinyBASU_Simulator:
         self.pc += 1
         return instr, addr
 
-    # ---------- دیکد کردن دستور ----------
+    # decode the commands
     def decode(self, instr):
         opcode = (instr >> 12) & 0xF
         rd = (instr >> 9) & 0x7
@@ -204,13 +204,13 @@ class TinyBASU_Simulator:
         imm = instr & 0x7
         return opcode, rd, rs, rt, imm
 
-    # ---------- گسترش علامت برای اعداد منفی ----------
+    # expantion for the signed numbers
     def sign_extend(self, value, bits):
         if value & (1 << (bits - 1)):
             return value - (1 << bits)
         return value
 
-    # ---------- اجرای دستور ----------
+    # execute the command
     def execute(self, opcode, rd, rs, rt, imm):
         if opcode == 0:  # R-type
             func = imm
