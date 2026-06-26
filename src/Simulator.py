@@ -242,12 +242,12 @@ class TinyBASU_Simulator:
         elif opcode == 11:  # bne
             return (self.regs[rs] != self.regs[rd])
         elif opcode == 14:  # jmp
-            return True  # همیشه پرش
+            return True  # always jump
         elif opcode == 15:  # jal
-            self.regs[7] = self.pc  # آدرس برگشت (PC+1)
+            self.regs[7] = self.pc  # pc+1
             return True
 
-    # ---------- پیش‌بینی پرش ----------
+    # jump prediction part
     def branch_prediction(self, opcode, pc):
         if opcode != 10 and opcode != 11:
             return None
@@ -269,7 +269,7 @@ class TinyBASU_Simulator:
             return self.BPT[pc] >= 4  # 3-bit saturating
         return False
 
-    # ---------- به‌روزرسانی جدول پیش‌بینی ----------
+    # update the prediction table
     def update_bpt(self, opcode, pc, actual_taken):
         if opcode != 10 and opcode != 11:
             return
@@ -290,18 +290,18 @@ class TinyBASU_Simulator:
             else:
                 self.BPT[pc] = max(0, self.BPT[pc] - 1)
 
-    # ---------- حلقه اصلی شبیه‌سازی ----------
+    # simulation main loop
     def simulate(self, timeout):
         while True:
             if self.num_cycles > timeout:
-                print(f"⏰ Timeout! سیکل‌ها از {timeout} گذشت.")
+                print(f"Timeout! Cycles exceeded {timeout}.")
                 break
 
             instr, addr = self.fetch()
             if instr is None:
                 break
-            if instr == 0:  # ممکنه دستور NOP یا ته حافظه باشه
-                # اگه به حافظه داده رسیدیم، تمومش کن
+            if instr == 0:  # NOP command
+                # if rech the memory data finish
                 if addr >= 256:
                     break
                 # در غیر این صورت یه دستور واقعیه که مقدارش ۰ هست
