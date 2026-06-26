@@ -4,7 +4,7 @@ class TinyBASU_Simulator:
     def __init__(self, prediction_method):
         # registers (8 to 16 bits)
         self.regs = [0] * 8
-        # حافظه (۵۱۲ خانه، ۱۶ بیتی)
+        # memory
         self.memory = [0] * 512
         # شمارنده برنامه
         self.pc = 0
