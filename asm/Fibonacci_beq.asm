@@ -1,6 +1,6 @@
 li rx6, 1                       # rx6 = 1 (Fibonacci number F0)
 li rx1, 1                       # rx1 = 1 (Fibonacci number F1) 
-addi rx2, rx0, 20               # rx2 = 20 (number of iterations)
+addi rx2, rx0, 30               # rx2 = 20 (number of iterations)
 addi rx3, rx0, 2                # rx3 = 2 (counter)
 
 loop:
