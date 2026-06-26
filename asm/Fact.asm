@@ -1,4 +1,5 @@
-li rx1, 50                           # rx1 = 50
+li rx1, 25                           # rx1 = 25
+add rx1, rx1, rx1                    # rx1 = 50 (25 + 25)
 li rx2, 1                            # rx2 = 1
 
 factorial_loop:                      # Factorial loop label
