@@ -304,107 +304,102 @@ class TinyBASU_Simulator:
                 # if rech the memory data finish
                 if addr >= 256:
                     break
-                # در غیر این صورت یه دستور واقعیه که مقدارش ۰ هست
-                # (که خیلی کم پیش میاد، ولی نادیده میگیریمش)
                 continue
 
             opcode, rd, rs, rt, imm = self.decode(instr)
             pc_fetch = addr
 
-            # ---- پیش‌بینی برای دستورات شرطی ----
+            # prediction for conditional commands
             predicted_taken = self.branch_prediction(opcode, pc_fetch)
             
-            # ---- آدرس هدف برای پرش‌ها ----
+            # target address for the jump
             target = None
             if opcode == 10 or opcode == 11:
                 imm_s = self.sign_extend(imm, 3)
                 target = pc_fetch + imm_s
             elif opcode == 14 or opcode == 15:
-                # آفست ۱۲ بیتی
+                # 12 bits offset
                 full_imm = (rd << 9) | (rs << 6) | (rt << 3) | imm
                 full_imm = self.sign_extend(full_imm, 12)
                 target = pc_fetch + full_imm
 
-            # ---- اعمال پیش‌بینی (تغییر PC به صورت حدسی) ----
+            # add the prediction
             if opcode == 10 or opcode == 11:
                 if predicted_taken:
                     self.pc = target
-                # else: self.pc همون PC+1 هست (که در fetch تنظیم شده)
+                # else: pc = pc + 1
             elif opcode == 14 or opcode == 15:
                 self.pc = target
 
-            # ---- اجرای واقعی دستور ----
+            # excute the real commands
             actual_taken = None
             if opcode == 10 or opcode == 11:
                 actual_taken = self.execute(opcode, rd, rs, rt, imm)
             elif opcode == 14:
                 self.execute(opcode, rd, rs, rt, imm)
             elif opcode == 15:
-                # قبل از تغییر PC، آدرس برگشت رو ذخیره کن (در execute انجام میشه)
+                # save the address before the excute
                 self.execute(opcode, rd, rs, rt, imm)
             else:
                 self.execute(opcode, rd, rs, rt, imm)
 
-            # ---- مدیریت جریمه پرش و پیش‌بینی نادرست ----
+            # jump and wrong prediction managment
             if opcode == 10 or opcode == 11:
                 self.num_branches += 1
-                # جریمه ۳ سیکل برای پرش‌های انجام‌شده (صرف نظر از پیش‌بینی)
+                # 3 cycle for every jump
                 if actual_taken:
                     self.num_stalls += 3
                     self.num_cycles += 3
                     self.num_taken_branches += 1
                 
-                # اصلاح PC در صورت پیش‌بینی نادرست
+                # PC Correction
                 if predicted_taken != actual_taken:
-                    # ۳ سیکل جریمه اضافه (در صورت نادرست بودن)
-                    # ولی اگه actual_taken=True بود، قبلاً ۳ تا اضافه کردیم.
-                    # اگه actual_taken=False بود و predicted=True بود، باید ۳ تا اضافه کنیم.
                     if not actual_taken:
                         self.num_stalls += 3
                         self.num_cycles += 3
-                    # تصحیح PC
+                    # correct the pc
                     if actual_taken:
                         imm_s = self.sign_extend(imm, 3)
                         self.pc = pc_fetch + imm_s
                     else:
                         self.pc = pc_fetch + 1
                 else:
-                    # پیش‌بینی درست
+                    # right prediction
                     self.num_correct_predictions += 1
                 
-                # به‌روزرسانی جدول پیش‌بینی
+                # update the prediction teable
                 self.update_bpt(opcode, pc_fetch, actual_taken)
 
             elif opcode == 14 or opcode == 15:
-                # پرش غیرشرطی همیشه انجام میشه
+                # always excute the unconditional jumps
                 self.num_branches += 1
                 self.num_taken_branches += 1
                 self.num_stalls += 3
                 self.num_cycles += 3
 
-            # ---- آمار نهایی ----
+            # finall stats
             self.num_cycles += 1
             self.num_instructions += 1
 
-    # ---------- تولید گزارش ----------
+    # make the reports
     def report(self, report_file):
         ipc = self.num_instructions / self.num_cycles if self.num_cycles > 0 else 0
         accuracy = (self.num_correct_predictions / self.num_branches * 100) if self.num_branches > 0 else 0
-        # شتاب نسبت به حالت بدون پیش‌بینی (همیشه پرش انجام نشده)
+        # Accesleration compared to the stats without prediction
         baseline_cycles = self.num_instructions + (self.num_taken_branches * 3)
         speedup = baseline_cycles / self.num_cycles if self.num_cycles > 0 else 1
 
         with open(report_file, 'w', encoding='utf-8') as f:
-            f.write("===== گزارش شبیه‌ساز TinyBASU =====\n")
-            f.write(f"روش پیش‌بینی: {self.prediction_method}\n")
-            f.write(f"تعداد سیکل‌ها: {self.num_cycles}\n")
-            f.write(f"تعداد دستورات اجرا شده: {self.num_instructions}\n")
-            f.write(f"IPC (دستور در هر سیکل): {ipc:.4f}\n")
-            f.write(f"تعداد توقف‌ها (جریمه پرش): {self.num_stalls}\n")
-            f.write(f"تعداد پرش‌ها: {self.num_branches}\n")
-            f.write(f"دقت پیش‌بینی پرش: {accuracy:.2f}%\n")
-            f.write(f"شتاب نسبت به حالت بدون پیش‌بینی: {speedup:.4f}x\n")
-            f.write("\n--- ثبات‌های نهایی ---\n")
+            f.write("===== Simulation report of TinyBASU =====\n")
+            f.write(f"Prediction Method: {self.prediction_method}\n")
+            f.write(f"Number of Cycles {self.num_cycles}\n")
+            f.write(f"Number of Executed commands: {self.num_instructions}\n")
+            f.write(f"IPC: {ipc:.4f}\n")
+            f.write(f"Number of Stops: {self.num_stalls}\n")
+            f.write(f"Number of jumps: {self.num_branches}\n")
+            f.write(f"Prediction precision: {accuracy:.2f}%\n")
+            f.write(f"Acceleration: {speedup:.4f}x\n")
+            f.write("\n Finall Registers:\n")
             for i in range(8):
                 f.write(f"r{i}: {self.regs[i]:04X} ({self.regs[i]})\n")
-            f.write(f"شمارنده برنامه (PC): {self.pc}\n")
+            f.write(f"PC: {self.pc}\n")
