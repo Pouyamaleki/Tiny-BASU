@@ -1,6 +1,6 @@
 li rx6, 1                     # rx6 = 1
 li rx1, 1                     # rx1 = 1
-addi rx2, rx0, 20             # rx2 = 20
+addi rx2, rx0, 30             # rx2 = 20
 addi rx3, rx0, 2              # rx3 = 2
 
 loop:                         # loop label
