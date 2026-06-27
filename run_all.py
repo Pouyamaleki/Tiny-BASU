@@ -36,6 +36,7 @@ ASM_FOLDER = os.path.join(BASE_DIR, "asm")
 REPORTS_FOLDER = os.path.join(BASE_DIR, "Reports")
 
 # Programs and methods
+# Note: Files inside 'misc' folder should be referenced with "misc/filename.asm"
 programs = [
     ("fibonacci_bne.asm", "fibo_bne"),
     ("fibonacci_beq.asm", "fibo_beq"),
@@ -59,7 +60,11 @@ print(f"📍 Using main.py from: {MAIN_SCRIPT}\n")
 for asm_file, base_name in programs:
     for method in methods:
         report_file = os.path.join(REPORTS_FOLDER, f"{base_name}_{method.lower()}.txt")
-        asm_path = os.path.join(ASM_FOLDER, asm_file)
+        
+        if asm_file.startswith("misc/"):
+            asm_path = os.path.join(BASE_DIR, asm_file)
+        else:
+            asm_path = os.path.join(ASM_FOLDER, asm_file)
 
         cmd = [
             "python",
@@ -81,5 +86,6 @@ for asm_file, base_name in programs:
 
         print("-" * 60)
 
-print("\n🎉 All 15 reports have been generated successfully!")
+total_reports = len(programs) * len(methods)
+print(f"\n🎉 All {total_reports} reports have been generated successfully!")
 print(f"📂 Check the '{REPORTS_FOLDER}' folder for the results.")
