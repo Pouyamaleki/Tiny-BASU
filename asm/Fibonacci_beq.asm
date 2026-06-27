@@ -1,6 +1,6 @@
 li rx6, 1                       # rx6 = 1 (Fibonacci number F0)
 li rx1, 1                       # rx1 = 1 (Fibonacci number F1) 
-addi rx2, rx0, 30               # rx2 = 20 (number of iterations)
+addi rx2, rx0, 30               # rx2 = 30 (number of iterations)
 addi rx3, rx0, 2                # rx3 = 2 (counter)
 
 loop:
@@ -10,6 +10,6 @@ loop:
     addi rx3, rx3, 1            # Increment the counter
     beq rx3, rx2, end           # Branch to last instruction
     jmp loop                    # jump to the loop label
-                                # the jump syntax is j but in the previous line i used jmp beacuse of the descriptions
+                                # i used jmp beacuse of the project conditions
 end: 
     add rx4, rx0, rx1           # save the resualt in the rx4 register
