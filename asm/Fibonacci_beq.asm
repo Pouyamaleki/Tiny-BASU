@@ -9,7 +9,7 @@ loop:
     addi rx1, rx4, 0            # rx1 = rx4
     addi rx3, rx3, 1            # Increment the counter
     beq rx3, rx2, end           # Branch to last instruction
-    jmp loop                    # Branch to last instruction
-
+    jmp loop                    # jump to the loop label
+                                # the jump syntax is j but in the previous line i used jmp beacuse of the descriptions
 end: 
     add rx4, rx0, rx1           # save the resualt in the rx4 register
