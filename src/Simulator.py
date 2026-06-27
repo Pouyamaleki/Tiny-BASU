@@ -355,7 +355,7 @@ class TinyBASU_Simulator:
 
     # jump prediction part
     def branch_prediction(self, opcode, pc):
-        if opcode != 10 and opcode != 11:
+        if opcode != 10 and opcode != 11 and opcode != 12 and opcode != 13:
             return None
         if self.prediction_method == 'ST':
             return True
