@@ -112,6 +112,31 @@ class TinyBASU_Simulator:
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
+                
+            #*********************************** I-type instructions ****************************
+            # New I-type instructions (MUST be checked BEFORE old ones)
+            elif mnemonic == 'slli': # shift left logical immediate
+                opcode = 6
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            elif mnemonic == 'srli': # shift right logical immediate
+                opcode = 7
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            elif mnemonic == 'andi': # and immediate
+                opcode = 8
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            elif mnemonic == 'ori': # or immediate
+                opcode = 9
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            
+            # old I-type instructions (before adding the misc folder)
             elif mnemonic == 'addi':
                 opcode = 1
                 rd = self.parse_register(operands[0])
@@ -195,28 +220,6 @@ class TinyBASU_Simulator:
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
             
-            #*********************************** I-type instructions ****************************
-            elif mnemonic == 'slli': # shift left logical immediate
-                opcode = 6
-                rd = self.parse_register(operands[0])
-                rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'srli': # shift right logical immediate
-                opcode = 7
-                rd = self.parse_register(operands[0])
-                rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'andi': # and immediate
-                opcode = 8
-                rd = self.parse_register(operands[0])
-                rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'ori': # or immediate
-                opcode = 9
-                rd = self.parse_register(operands[0])
-                rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x3F
-                
             # ********************* new branches **************************************
             elif mnemonic == 'bltz': # bitwize and immediate
                 opcode = 12
