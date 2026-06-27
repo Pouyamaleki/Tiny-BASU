@@ -39,8 +39,8 @@ REPORTS_FOLDER = os.path.join(BASE_DIR, "Reports")
 programs = [
     ("fibonacci_bne.asm", "fibo_bne"),
     ("fibonacci_beq.asm", "fibo_beq"),
-    ("fact.asm", "fact")
-    ("new_instructions.asm", "new_instructions")
+    ("fact.asm", "fact"),
+    ("misc/new_instructions.asm", "new_instructions")
 ]
 
 methods = ["ST", "SN", "D1", "D2", "IQ"]
