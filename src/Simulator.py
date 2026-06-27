@@ -292,7 +292,8 @@ class TinyBASU_Simulator:
 
     # execute the command
     def execute(self, opcode, rd, rs, rt, imm):
-        if opcode == 0:  # R-type
+        # R-type
+        if opcode == 0:
             func = imm
             if func == 1:  # add
                 self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF
@@ -300,6 +301,16 @@ class TinyBASU_Simulator:
                 self.regs[rd] = (self.regs[rs] - self.regs[rt]) & 0xFFFF
             elif func == 4:  # slt
                 self.regs[rd] = 1 if self.regs[rs] < self.regs[rt] else 0
+            elif func == 3:  # mul
+                self.regs[rd] = (self.regs[rs] * self.regs[rt]) & 0xFFFF
+            elif func == 5:  # div
+                if self.regs[rt] != 0:
+                    self.regs[rd] = self.regs[rs] // self.regs[rt]
+            elif func == 6:  # sll
+                self.regs[rd] = (self.regs[rs] << self.regs[rt]) & 0xFFFF
+            elif func == 7:  # srl
+                self.regs[rd] = (self.regs[rs] >> self.regs[rt]) & 0xFFFF
+        # I-type
         elif opcode == 1:  # addi
             imm_s = self.sign_extend(imm, 6)
             self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
@@ -307,6 +318,7 @@ class TinyBASU_Simulator:
             self.regs[rd] = self.sign_extend(imm, 6)
         elif opcode == 3:  # lui
             self.regs[rd] = (imm << 10) & 0xFFFF
+        # load and store word
         elif opcode == 4:  # lw
             imm_s = self.sign_extend(imm, 6)
             addr = (self.regs[rs] + imm_s) & 0xFFFF
@@ -317,42 +329,25 @@ class TinyBASU_Simulator:
             addr = (self.regs[rs] + imm_s) & 0xFFFF
             if 256 <= addr <= 511:
                 self.memory[addr] = self.regs[rd]
+        # compare instructions
         elif opcode == 10:  # beq
             return (self.regs[rs] == self.regs[rd])  # rt = rd
         elif opcode == 11:  # bne
             return (self.regs[rs] != self.regs[rd])
+        #bltz
+        elif opcode == 12:
+            return self.sign_extend(self.regs[rd], 16) < 0
+        # bgtz
+        elif opcode == 13:
+            return self.sign_extend(self.regs[rd], 16) > 0
+        # jump instructions
         elif opcode == 14:  # jmp
             return True  # always jump
         elif opcode == 15:  # jal
             self.regs[7] = self.pc  # pc+1
             return True
         
-        #****************************** R-type execute *************************************
-        elif func == 3:  # mul
-            self.regs[rd] = (self.regs[rs] * self.regs[rt]) & 0xFFFF
-        elif func == 5:  # div
-            if self.regs[rt] != 0:
-                self.regs[rd] = self.regs[rs] // self.regs[rt]
-        elif func == 6:  # sll
-            self.regs[rd] = (self.regs[rs] << self.regs[rt]) & 0xFFFF
-        elif func == 7:  # srl
-               self.regs[rd] = (self.regs[rs] >> self.regs[rt]) & 0xFFFF
         
-        #***************************** I-type execute **************************************
-        elif opcode == 6:  # slli
-            self.regs[rd] = (self.regs[rs] << imm) & 0xFFFF
-        elif opcode == 7:  # srli
-            self.regs[rd] = (self.regs[rs] >> imm) & 0xFFFF
-        elif opcode == 8:  # andi
-            self.regs[rd] = self.regs[rs] & imm
-        elif opcode == 9:  # ori
-            self.regs[rd] = self.regs[rs] | imm
-        elif opcode == 12:  # bltz
-            return self.sign_extend(self.regs[rd], 16) < 0
-        elif opcode == 13:  # bgtz
-            return self.sign_extend(self.regs[rd], 16) > 0
-        
-
     # jump prediction part
     def branch_prediction(self, opcode, pc):
         if opcode != 10 and opcode != 11 and opcode != 12 and opcode != 13:
