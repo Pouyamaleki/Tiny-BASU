@@ -421,7 +421,7 @@ class TinyBASU_Simulator:
             
             # target address for the jump
             target = None
-            if opcode == 10 or opcode == 11:
+            if opcode == 10 or opcode == 11 or opcode == 12 or opcode == 13:
                 imm_s = self.sign_extend(imm, 6)
                 target = pc_fetch + imm_s
             elif opcode == 14 or opcode == 15:
@@ -431,7 +431,7 @@ class TinyBASU_Simulator:
                 target = pc_fetch + full_imm
 
             # add the prediction
-            if opcode == 10 or opcode == 11:
+            if opcode == 10 or opcode == 11 or opcode == 12 or opcode == 13:
                 if predicted_taken:
                     self.pc = target
                 # else: pc = pc + 1
@@ -440,7 +440,7 @@ class TinyBASU_Simulator:
 
             # excute the real commands
             actual_taken = None
-            if opcode == 10 or opcode == 11:
+            if opcode == 10 or opcode == 11 or opcode == 12 or opcode == 13:
                 actual_taken = self.execute(opcode, rd, rs, rt, imm)
             elif opcode == 14:
                 self.execute(opcode, rd, rs, rt, imm)
@@ -451,7 +451,7 @@ class TinyBASU_Simulator:
                 self.execute(opcode, rd, rs, rt, imm)
 
             # jump and wrong prediction managment
-            if opcode == 10 or opcode == 11:
+            if opcode == 10 or opcode == 11 or opcode == 12 or opcode == 13:
                 self.num_branches += 1
                 if actual_taken:
                     self.num_taken_branches += 1
