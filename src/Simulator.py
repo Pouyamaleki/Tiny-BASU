@@ -377,7 +377,7 @@ class TinyBASU_Simulator:
 
     # update the prediction table
     def update_bpt(self, opcode, pc, actual_taken):
-        if opcode != 10 and opcode != 11:
+        if opcode != 10 and opcode != 11 and opcode != 12 and opcode != 13:
             return
         if self.prediction_method == 'D1':
             self.BPT[pc] = 1 if actual_taken else 0
