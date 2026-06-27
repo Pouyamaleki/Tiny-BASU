@@ -170,25 +170,25 @@ class TinyBASU_Simulator:
                 imm = full_imm & 0x7
                 
             #*************** Related to the misc File (R-typr instructions) *******************
-            elif mnemonic == 'mul': 
+            elif mnemonic == 'mul': # multipliction
                 opcode = 0
                 func = 3
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
-            elif mnemonic == 'div':
+            elif mnemonic == 'div': # division
                 opcode = 0
                 func = 5
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
-            elif mnemonic == 'sll':
+            elif mnemonic == 'sll': # shift left logical
                 opcode = 0
                 func = 6
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
-            elif mnemonic == 'srl':
+            elif mnemonic == 'srl': # shift right logical
                 opcode = 0
                 func = 7
                 rd = self.parse_register(operands[0])
@@ -196,35 +196,35 @@ class TinyBASU_Simulator:
                 rt = self.parse_register(operands[2])
             
             #*********************************** I-type instructions ****************************
-            elif mnemonic == 'slli':
+            elif mnemonic == 'slli': # shift left logical immediate
                 opcode = 6
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'srli':
+            elif mnemonic == 'srli': # shift right logical immediate
                 opcode = 7
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'andi':
+            elif mnemonic == 'andi': # and immediate
                 opcode = 8
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'ori':
+            elif mnemonic == 'ori': # or immediate
                 opcode = 9
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
                 
             # ********************* new branches **************************************
-            elif mnemonic == 'bltz':
+            elif mnemonic == 'bltz': # bitwize and immediate
                 opcode = 12
                 rd = self.parse_register(operands[0])
                 label = operands[1]
                 offset = self.labels[label] - address
                 imm = offset & 0x3F
-            elif mnemonic == 'bgtz':
+            elif mnemonic == 'bgtz': # bitwize or
                 opcode = 13
                 rd = self.parse_register(operands[0])
                 label = operands[1]
@@ -326,6 +326,32 @@ class TinyBASU_Simulator:
         elif opcode == 15:  # jal
             self.regs[7] = self.pc  # pc+1
             return True
+        
+        #****************************** R-type execute *************************************
+        elif func == 3:  # mul
+            self.regs[rd] = (self.regs[rs] * self.regs[rt]) & 0xFFFF
+        elif func == 5:  # div
+            if self.regs[rt] != 0:
+                self.regs[rd] = self.regs[rs] // self.regs[rt]
+        elif func == 6:  # sll
+            self.regs[rd] = (self.regs[rs] << self.regs[rt]) & 0xFFFF
+        elif func == 7:  # srl
+               self.regs[rd] = (self.regs[rs] >> self.regs[rt]) & 0xFFFF
+        
+        #***************************** I-type execute **************************************
+        elif opcode == 6:  # slli
+            self.regs[rd] = (self.regs[rs] << imm) & 0xFFFF
+        elif opcode == 7:  # srli
+            self.regs[rd] = (self.regs[rs] >> imm) & 0xFFFF
+        elif opcode == 8:  # andi
+            self.regs[rd] = self.regs[rs] & imm
+        elif opcode == 9:  # ori
+            self.regs[rd] = self.regs[rs] | imm
+        elif opcode == 12:  # bltz
+            return self.sign_extend(self.regs[rd], 16) < 0
+        elif opcode == 13:  # bgtz
+            return self.sign_extend(self.regs[rd], 16) > 0
+        
 
     # jump prediction part
     def branch_prediction(self, opcode, pc):
