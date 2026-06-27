@@ -168,6 +168,56 @@ class TinyBASU_Simulator:
                 rs = (full_imm >> 6) & 0x7
                 rt = (full_imm >> 3) & 0x7
                 imm = full_imm & 0x7
+                
+            #*************** Related to the misc File (R-typr instructions) *******************
+            elif mnemonic == 'mul': 
+                opcode = 0
+                func = 3
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                rt = self.parse_register(operands[2])
+            elif mnemonic == 'div':
+                opcode = 0
+                func = 5
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                rt = self.parse_register(operands[2])
+            elif mnemonic == 'sll':
+                opcode = 0
+                func = 6
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                rt = self.parse_register(operands[2])
+            elif mnemonic == 'srl':
+                opcode = 0
+                func = 7
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                rt = self.parse_register(operands[2])
+            
+            #*********************************** I-type instructions ****************************
+            elif mnemonic == 'slli':
+                opcode = 6
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            elif mnemonic == 'srli':
+                opcode = 7
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            elif mnemonic == 'andi':
+                opcode = 8
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+            elif mnemonic == 'ori':
+                opcode = 9
+                rd = self.parse_register(operands[0])
+                rs = self.parse_register(operands[1])
+                imm = int(operands[2]) & 0x3F
+                
+            # 
             else:
                 raise ValueError(f"Unknown Command: {mnemonic}")
 
