@@ -217,7 +217,21 @@ class TinyBASU_Simulator:
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
                 
-            # 
+            # ********************* new branches **************************************
+            elif mnemonic == 'bltz':
+                opcode = 12
+                rd = self.parse_register(operands[0])
+                label = operands[1]
+                offset = self.labels[label] - address
+                imm = offset & 0x3F
+            elif mnemonic == 'bgtz':
+                opcode = 13
+                rd = self.parse_register(operands[0])
+                label = operands[1]
+                offset = self.labels[label] - address
+                imm = offset & 0x3F
+                
+            # ***********************************************************************
             else:
                 raise ValueError(f"Unknown Command: {mnemonic}")
 
