@@ -16,6 +16,7 @@ A complete **5-stage pipeline processor simulator** for the **TinyBASU** archite
 - [Optional Extension](#optional-extension)
 - [Simulation Results](#simulation-results)
 - [Author](#author)
+- [License](#license)
 
 <br>
 
@@ -580,6 +581,7 @@ Tiny BASU project Implemented by [Pouyamaleki](https://github.com/Pouyamaleki)
 Computer Architecture Project – summer 2026  
 Supervised by: Dr. Mehdi Abbasi
 
+<a id="license"></a>
 ## 📝 License
 
 MIT License - feel free to use, learn, and improve!
