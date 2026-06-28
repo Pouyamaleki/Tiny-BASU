@@ -14,8 +14,8 @@ fibo_bne_d2.txt
 fibo_bne_iq.txt
 fibo_bne_sn.txt
 fibo_bne_st.txt
-new_instruction_d1.txt
-new_instruction_d2.txt
-new_instruction_iq.txt
-new_instruction_sn.txt
-new_instruction_st.txt
+new_instructions_d1.txt
+new_instructions_d2.txt
+new_instructions_iq.txt
+new_instructions_sn.txt
+new_instructions_st.txt
