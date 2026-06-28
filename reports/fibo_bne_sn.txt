@@ -1,0 +1,22 @@
+****************Simulation report of TinyBASU**************
+Simulator runtime: 0.0002 seconds
+Number of Assembly Instructions: 10
+Prediction Method: SN
+Number of Cycles 226
+Number of Executed commands: 145
+IPC: 0.6416
+Number of Stops: 81
+Number of jumps: 28
+Prediction precision: 3.57%
+Acceleration: 1.0133x
+
+**********************Finall Registers********************
+r0: 0000 (0)
+r1: 0000 (0)
+r2: 001E (30)
+r3: 001E (30)
+r4: 0000 (0)
+r5: 0000 (0)
+r6: 0000 (0)
+r7: 0000 (0)
+PC: 257
