@@ -94,19 +94,19 @@ class TinyBASU_Simulator:
             func = 0
 
             # check the orders ti find out what are they
-            if mnemonic == 'add':
+            if mnemonic == 'add': # add instruction
                 opcode = 0
                 func = 1
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
-            elif mnemonic == 'sub':
+            elif mnemonic == 'sub': # subtract instrunctio
                 opcode = 0
                 func = 2
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 rt = self.parse_register(operands[2])
-            elif mnemonic == 'slt':
+            elif mnemonic == 'slt': # set on less than instruction
                 opcode = 0
                 func = 4
                 rd = self.parse_register(operands[0])
@@ -114,7 +114,7 @@ class TinyBASU_Simulator:
                 rt = self.parse_register(operands[2])
                 
             #*********************************** I-type instructions ****************************
-            # New I-type instructions (MUST be checked BEFORE old ones)
+            # New I-type instructions (should be checked before old ones)
             elif mnemonic == 'slli': # shift left logical immediate
                 opcode = 6
                 rd = self.parse_register(operands[0])
@@ -137,44 +137,44 @@ class TinyBASU_Simulator:
                 imm = int(operands[2]) & 0x3F
             
             # old I-type instructions (before adding the misc folder)
-            elif mnemonic == 'addi':
+            elif mnemonic == 'addi': # addi instruction
                 opcode = 1
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
-                imm = int(operands[2]) & 0x3F  # six bits
-            elif mnemonic == 'li':
+                imm = int(operands[2]) & 0x3F  # 6 bits
+            elif mnemonic == 'li': # load immediate
                 opcode = 2
                 rd = self.parse_register(operands[0])
                 imm = int(operands[1]) & 0x3F
-            elif mnemonic == 'lui':
+            elif mnemonic == 'lui': # load upper immediate
                 opcode = 3
                 rd = self.parse_register(operands[0])
                 imm = int(operands[1]) & 0x3F
-            elif mnemonic == 'lw':
+            elif mnemonic == 'lw': # load word
                 opcode = 4
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'sw':
+            elif mnemonic == 'sw': # store word
                 opcode = 5
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 imm = int(operands[2]) & 0x3F
-            elif mnemonic == 'beq':
+            elif mnemonic == 'beq': # branch equall
                 opcode = 10
                 rd = self.parse_register(operands[0])  # rt
                 rs = self.parse_register(operands[1])
                 label = operands[2]
                 offset = self.labels[label] - address
                 imm = offset & 0x3F  # 6 bits
-            elif mnemonic == 'bne':
+            elif mnemonic == 'bne': # branch not equall
                 opcode = 11
                 rd = self.parse_register(operands[0])
                 rs = self.parse_register(operands[1])
                 label = operands[2]
                 offset = self.labels[label] - address
                 imm = offset & 0x3F
-            elif mnemonic == 'jmp':
+            elif mnemonic == 'jmp': # jump instruction
                 opcode = 14
                 label = operands[0]
                 offset = self.labels[label] - address
@@ -184,7 +184,7 @@ class TinyBASU_Simulator:
                 rs = (full_imm >> 6) & 0x7
                 rt = (full_imm >> 3) & 0x7
                 imm = full_imm & 0x7
-            elif mnemonic == 'jal':
+            elif mnemonic == 'jal': # jump and link
                 opcode = 15
                 label = operands[0]
                 offset = self.labels[label] - address
@@ -318,7 +318,7 @@ class TinyBASU_Simulator:
             imm_s = self.sign_extend(imm, 6)
             self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
         elif opcode == 2:  # li
-            self.regs[rd] = self.sign_extend(imm, 6)
+            self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF
         elif opcode == 3:  # lui
             self.regs[rd] = (imm << 10) & 0xFFFF
         # load and store word
@@ -506,5 +506,5 @@ class TinyBASU_Simulator:
             f.write(f"Acceleration: {speedup:.4f}x\n")
             f.write("\n**********************Finall Registers********************\n")
             for i in range(8):
-                f.write(f"r{i}: {self.regs[i]:04X} ({self.regs[i]})\n")
+                f.write(f"r{i}: {self.regs[i] & 0xFFFF:04X} ({self.regs[i]})\n")
             f.write(f"PC: {self.pc}\n")
