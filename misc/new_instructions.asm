@@ -13,7 +13,7 @@ slli rx0, rx1, 2                 # rx0 = 6 << 2 = 24
 srli rx0, rx0, 1                 # rx0 = 24 >> 1 = 12
 
 andi rx0, rx3, 15                # rx0 = 24 & 15 = 8 ( & is the and sign)
-ori rx0, rx0, rx1                # rx0 = 8 | 6 = 14 ( | is the or sign)
+ori rx0, rx0, 6                  # rx0 = 8 | 6 = 14 ( | is the or sign)
 
 li rx7, 10                       # rx7 = 10
 li rx6, 0                        # rx6 = 0
