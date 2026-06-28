@@ -43,10 +43,11 @@ TinyBUSA/
 │   ├── 📄main.py
 │   └── 📄simulator.py
 │
-├── 📜 run_all.py
-├── 📜 data.txt
-├── 📝 README.md
+├── 📄.gitignore
 └── 📝 LICENSE
+├── 📝 README.md
+├── 📜 data.txt
+├── 📜 run_all.py
 ```
 
 <a id="architecture"></a>
