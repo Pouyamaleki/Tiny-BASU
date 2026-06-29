@@ -27,11 +27,15 @@ A complete **5-stage pipeline processor simulator** for the **TinyBASU** archite
 TinyBUSA/
 │
 ├── 📂 asm/
+│   ├── 📜fibonacci_bne_date.txt
 │   ├── 📄fibonacci_bne.asm
+│   ├── 📜fibonacci_beq_data.txt
 │   ├── 📄fibonacci_beq.asm
+│   ├── 📜fact_data.txt
 │   └── 📄fact.asm
 │
 ├── 📂 misc/
+│   ├── 📜new_instructions_data.txt
 │   └── 📄new_instructions.asm
 │
 ├── 📂 reports/
@@ -47,7 +51,6 @@ TinyBUSA/
 ├── 📄.gitignore
 ├── 📝 LICENSE
 ├── 📝 README.md
-├── 📜 data.txt
 └── 📜 run_all.py
 ```
 
