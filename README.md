@@ -45,10 +45,10 @@ TinyBUSA/
 │   └── 📄simulator.py
 │
 ├── 📄.gitignore
-└── 📝 LICENSE
+├── 📝 LICENSE
 ├── 📝 README.md
 ├── 📜 data.txt
-├── 📜 run_all.py
+└── 📜 run_all.py
 ```
 
 <a id="architecture"></a>
@@ -577,7 +577,7 @@ A comprehensive test program validates all 10 new instructions, including:
 <a id="author"></a>
 ## 👤 Author
 
-Tiny BASU project Implemented by [Pouyamaleki](https://github.com/Pouyamaleki)  
+TinyBASU project Implemented by [Pouyamaleki](https://github.com/Pouyamaleki)  
 Computer Architecture Project – summer 2026  
 Supervised by: Dr. Mehdi Abbasi
 
