@@ -1,5 +1,5 @@
 ****************Simulation report of TinyBASU**************
-Simulator runtime: 0.0022 seconds
+Simulator runtime: 0.0009 seconds
 Number of Assembly Instructions: 11
 Prediction Method: IQ
 Number of Cycles 1205

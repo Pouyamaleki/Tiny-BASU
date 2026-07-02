@@ -11,7 +11,7 @@ Prediction precision: 9.09%
 Acceleration: 1.0395x
 
 **********************Finall Registers********************
-r0: 0000 (0)
+r0: 0006 (6)
 r1: FFFE (65534)
 r2: 0004 (4)
 r3: 0000 (0)
