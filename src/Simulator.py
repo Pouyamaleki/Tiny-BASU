@@ -332,6 +332,14 @@ class TinyBASU_Simulator:
             addr = (self.regs[rs] + imm_s) & 0xFFFF
             if 256 <= addr <= 511:
                 self.memory[addr] = self.regs[rd]
+        elif opcode == 6:  # slli
+            self.regs[rd] = (self.regs[rs] << imm) & 0xFFFF
+        elif opcode == 7:  # srli
+            self.regs[rd] = (self.regs[rs] >> imm) & 0xFFFF
+        elif opcode == 8:  # andi
+            self.regs[rd] = self.regs[rs] & imm
+        elif opcode == 9:  # ori
+            self.regs[rd] = self.regs[rs] | imm
         # compare instructions
         elif opcode == 10:  # beq
             return (self.regs[rs] == self.regs[rd])  # rt = rd
