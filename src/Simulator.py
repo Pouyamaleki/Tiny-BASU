@@ -517,5 +517,7 @@ class TinyBASU_Simulator:
             f.write(f"Acceleration: {speedup:.4f}x\n")
             f.write("\n**********************Finall Registers********************\n")
             for i in range(8):
+                f.write(f"128-bit Result High : {self.fact_high:016X}\n")
+                f.write(f"128-bit Result Low  : {self.fact_low:016X}\n")
                 f.write(f"r{i}: {self.regs[i] & 0xFFFF:04X} ({self.regs[i]})\n")
             f.write(f"PC: {self.pc}\n")
