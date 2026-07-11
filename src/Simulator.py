@@ -5,6 +5,9 @@ class TinyBASU_Simulator:
     def __init__(self, prediction_method):
         # registers (8 to 16 bits)
         self.regs = [0] * 8
+        # two 64 bits registers
+        self.fact_low = 0
+        self.fact_high = 0
         # memory
         self.memory = [0] * 512
         # Program Counter
