@@ -1,5 +1,5 @@
 ****************Simulation report of TinyBASU**************
-Simulator runtime: 0.0009 seconds
+Simulator runtime: 0.0332 seconds
 Number of Assembly Instructions: 12
 Prediction Method: D2
 Number of Cycles 1194

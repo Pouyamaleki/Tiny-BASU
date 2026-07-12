@@ -316,15 +316,10 @@ class TinyBASU_Simulator:
     
     # 128-bit result using two 64-bit words
     def add_128bit(self, dst_low, dst_high, src_low, src_high):
-        new_low = dst_low + src_low
-        carry = 0
-
-        if new_low > 0xFFFFFFFFFFFFFFFF:
-            carry = 1
-            new_low &= 0xFFFFFFFFFFFFFFFF
-
-        new_high = (dst_high + src_high + carry) & 0xFFFFFFFFFFFFFFFF
-
+        total = (dst_high << 64) | dst_low
+        total += (src_high << 64) | src_low
+        new_low = total & 0xFFFFFFFFFFFFFFFF
+        new_high = (total >> 64) & 0xFFFFFFFFFFFFFFFF
         return new_low, new_high
 
     # execute the command
@@ -332,6 +327,7 @@ class TinyBASU_Simulator:
         # R-type
         if opcode == 0:
             func = imm
+            print(f"opcode={opcode}, func={func}")
             if func == 1:  # add
                 self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
                 # Factorial simulation: add rx3, rx3, rx2
