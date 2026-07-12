@@ -337,7 +337,6 @@ class TinyBASU_Simulator:
                 # Factorial simulation: add rx3, rx3, rx2
                 if self.is_factorial:
                     if rd == 3 and rs == 3 and rt == 2:
-                        if self.is_factorial:
                             self.temp_low64, self.temp_high64 = self.add_128bit(
                                 self.temp_low64,
                                 self.temp_high64,
