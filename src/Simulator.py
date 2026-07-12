@@ -26,8 +26,10 @@ class TinyBASU_Simulator:
         self.wall_time = 0
         self.num_assembly_instr = 0
         # two 64 bits varibales
-        self.high64 = 0
-        self.low64 = 0
+        self.high2_64 = 0
+        self.low2_64 = 0
+        self.high3_64 = 0
+        self.low3_64 = 0
         # a flag for Fact file
         self.is_factorial = False
 
