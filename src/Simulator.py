@@ -368,9 +368,9 @@ class TinyBASU_Simulator:
             self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF
             # Factorial simulation
             if self.is_factorial:
-                if rd == 3:  # ONLY rx3
-                    self.temp_128bit = [0] * 8
-                    self.temp_128bit[0] = self.regs[rd]
+                if rd == 3:  # only for rx3 register
+                    self.temp_low64 = self.regs[rd]
+                    self.temp_high64 = 0
         elif opcode == 3:  # lui
             self.regs[rd] = (imm << 10) & 0xFFFF
         # load and store word
