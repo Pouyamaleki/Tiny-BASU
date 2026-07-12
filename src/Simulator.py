@@ -566,13 +566,7 @@ class TinyBASU_Simulator:
             f.write(f"Acceleration: {speedup:.4f}x\n")
             f.write("\n**********************Finall Registers********************\n")
             for i in range(8):
-                f.write(f"r{i}: {self.regs[i] & 0xFFFF:04X} ({self.regs[i]})\n")
-            f.write(f"PC: {self.pc}\n")
-            # 128-bit Factorial result
-            if self.is_factorial:
                 f.write("\n**********************128-bit Factorial Result********************\n")
-                hex_str = ""
-                for i in range(7, -1, -1):
-                    hex_str += f"{self.result_128bit[i]:04X}"
-                f.write(f"Result (128-bit): {hex_str}\n")
-                f.write(f"Array: {[f'{val:04X}' for val in reversed(self.result_128bit)]}\n")
+                f.write(f"High64: {self.result_high64:016X}\n")
+                f.write(f"Low64 : {self.result_low64:016X}\n")
+                f.write(f"Result (128-bit): "f"{self.result_high64:016X}"f"{self.result_low64:016X}\n")
