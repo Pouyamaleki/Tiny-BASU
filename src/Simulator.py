@@ -331,13 +331,12 @@ class TinyBASU_Simulator:
         if opcode == 0:
             func = imm
             if func == 1:  # add
-               self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
+              self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
                # Factorial simulation: add rx3, rx3, rx2
-               if self.is_factorial and rd == 3 and rs == 3 and rt == 2:
-                    # low3_64 += low2_64 with carry to high3_64
-                    self.high3_64, self.low3_64 = self.add_128bit(
-                        self.high3_64, self.low3_64,
-                        self.high2_64, self.low2_64)
+              if self.is_factorial and rd == 3 and rs == 3 and rt == 2:
+                self.high3_64, self.low3_64 = self.add_128bit(
+                self.high3_64, self.low3_64,
+                self.high2_64, self.low2_64)
             elif func == 2:  # sub
                 self.regs[rd] = (self.regs[rs] - self.regs[rt]) & 0xFFFF
             elif func == 4:  # slt
@@ -363,12 +362,12 @@ class TinyBASU_Simulator:
             self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF  
             # Factorial simulation
             if self.is_factorial:
-                if rd == 2:  # li rx2, ...
-                    self.high2_64 = 0
-                    self.low2_64 = self.regs[rd]
-                elif rd == 3:  # li rx3, ...
-                    self.high3_64 = 0
-                    self.low3_64 = self.regs[rd]
+               if rd == 2:  # li rx2, ...
+                self.high2_64 = 0
+                self.low2_64 = self.regs[rd]
+               elif rd == 3:  # li rx3, ...
+                self.high3_64 = 0
+                self.low3_64 = self.regs[rd]
         elif opcode == 3:  # lui
             self.regs[rd] = (imm << 10) & 0xFFFF
         # load and store word
