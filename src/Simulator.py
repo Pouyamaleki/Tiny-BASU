@@ -362,7 +362,8 @@ class TinyBASU_Simulator:
             # Factorial simulation: addi rx2, rx3, 0 (rx2 = rx3)
             if self.is_factorial:
                 if rd == 2 and rs == 3 and imm_s == 0:
-                    self.result_128bit = self.temp_128bit.copy()
+                    self.result_low64 = self.temp_low64
+                    self.result_high64 = self.temp_high64
         elif opcode == 2:  # li
             self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF
             # Factorial simulation
