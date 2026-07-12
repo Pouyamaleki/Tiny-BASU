@@ -316,12 +316,18 @@ class TinyBASU_Simulator:
     
     # a function for 128 bits sum operation 
     # 128-bit addition with carry handling
-    def add_128bit_array(self, dst, src):
+    # a function for 128 bits sum operation
+    def add_128bit(self, dst_low, dst_high, src_low, src_high):
+        new_low = dst_low + src_low
         carry = 0
-        for i in range(8):
-            temp = dst[i] + src[i] + carry
-            dst[i] = temp & 0xFFFF
-            carry = 1 if temp > 0xFFFF else 0
+
+        if new_low > 0xFFFFFFFFFFFFFFFF:
+            carry = 1
+            new_low &= 0xFFFFFFFFFFFFFFFF
+
+        new_high = (dst_high + src_high + carry) & 0xFFFFFFFFFFFFFFFF
+
+        return new_low, new_high
 
     # execute the command
     def execute(self, opcode, rd, rs, rt, imm):
@@ -332,13 +338,8 @@ class TinyBASU_Simulator:
                 self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
                 # Factorial simulation: add rx3, rx3, rx2
                 if self.is_factorial:
-                    print(f"[ADD] rd={rd}, rs={rs}, rt={rt} | r{rd}={self.regs[rd]} r{rs}={self.regs[rs]} r{rt}={self.regs[rt]}")
                     if rd == 3 and rs == 3 and rt == 2:
-                        print(f"  → Factorial ADD detected! temp += result")
                         self.add_128bit_array(self.temp_128bit, self.result_128bit)
-                        print(f"  → temp_128bit = {self.temp_128bit}")
-                    else:
-                        print(f"  → Skipped (condition not met)")
             elif func == 2:  # sub
                 self.regs[rd] = (self.regs[rs] - self.regs[rt]) & 0xFFFF
             elif func == 4:  # slt
@@ -358,21 +359,15 @@ class TinyBASU_Simulator:
             self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
             # Factorial simulation: addi rx2, rx3, 0 (rx2 = rx3)
             if self.is_factorial:
-                print(f"[ADDI] rd={rd}, rs={rs}, imm={imm}, imm_s={imm_s}")
                 if rd == 2 and rs == 3 and imm_s == 0:
-                    print(f"  → Factorial ADDI detected! result = temp")
                     self.result_128bit = self.temp_128bit.copy()
-                    print(f"  → result_128bit = {self.result_128bit}")
         elif opcode == 2:  # li
             self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF
             # Factorial simulation
             if self.is_factorial:
-                print(f"[LI] rd={rd}, value={self.regs[rd]}")
                 if rd == 3:  # ONLY rx3
-                    print(f"  → Reset temp_128bit")
                     self.temp_128bit = [0] * 8
                     self.temp_128bit[0] = self.regs[rd]
-                    print(f"  → temp_128bit = {self.temp_128bit}")
         elif opcode == 3:  # lui
             self.regs[rd] = (imm << 10) & 0xFFFF
         # load and store word
