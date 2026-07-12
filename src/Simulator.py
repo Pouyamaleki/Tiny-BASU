@@ -25,12 +25,9 @@ class TinyBASU_Simulator:
         self.labels = {}
         self.wall_time = 0
         self.num_assembly_instr = 0
-        # two 64 bits varibales
-        self.high2_64 = 0
-        self.low2_64 = 0
-        self.high3_64 = 0
-        self.low3_64 = 0
-        # a flag for Fact file
+        # 128-bit result as array of 8 16-bit values
+        self.result_128bit = [0] * 8  # for rx2 (final result)
+        self.temp_128bit = [0] * 8    # for rx3 (intermediate)
         self.is_factorial = False
 
     # assembler
@@ -258,19 +255,16 @@ class TinyBASU_Simulator:
 
     # initializing the memory
     def init_memory(self, inst_file, data_file):
-        # if the program is testing Fact file set flag and reset 128-bit variables
+        # if the program is testing Fact file set flag and reset 128-bit arrays
         if 'Fact' in inst_file or 'fact' in inst_file:
             self.is_factorial = True
-            self.high2_64 = 0
-            self.low2_64 = 1      # rx2 = 1 initially
-            self.high3_64 = 0
-            self.low3_64 = 0
+            self.result_128bit = [0] * 8
+            self.result_128bit[0] = 1      # rx2 = 1 initially
+            self.temp_128bit = [0] * 8
         else:
             self.is_factorial = False
-            self.high2_64 = 0
-            self.low2_64 = 0
-            self.high3_64 = 0
-            self.low3_64 = 0
+            self.result_128bit = [0] * 8
+            self.temp_128bit = [0] * 8
             
         # assemble the command file
         self.assemble_file(inst_file)
@@ -316,14 +310,12 @@ class TinyBASU_Simulator:
     
     # a function for 128 bits sum operation 
     # 128-bit addition with carry handling
-    def add_128bit(self, high_a, low_a, high_b, low_b):
-        """Add two 128-bit numbers and return (new_high, new_low)"""
-        new_low = low_a + low_b
-        carry = 1 if new_low > 0xFFFFFFFFFFFFFFFF else 0
-        new_low &= 0xFFFFFFFFFFFFFFFF
-        new_high = high_a + high_b + carry
-        new_high &= 0xFFFFFFFFFFFFFFFF
-        return new_high, new_low
+    def add_128bit_array(self, dst, src):
+        carry = 0
+        for i in range(8):
+            temp = dst[i] + src[i] + carry
+            dst[i] = temp & 0xFFFF
+            carry = 1 if temp > 0xFFFF else 0
 
     # execute the command
     def execute(self, opcode, rd, rs, rt, imm):
@@ -331,12 +323,16 @@ class TinyBASU_Simulator:
         if opcode == 0:
             func = imm
             if func == 1:  # add
-              self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
-               # Factorial simulation: add rx3, rx3, rx2
-              if self.is_factorial and rd == 3 and rs == 3 and rt == 2:
-                self.high3_64, self.low3_64 = self.add_128bit(
-                self.high3_64, self.low3_64,
-                self.high2_64, self.low2_64)
+                self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
+                # Factorial simulation: add rx3, rx3, rx2
+                if self.is_factorial:
+                    print(f"[ADD] rd={rd}, rs={rs}, rt={rt} | r{rd}={self.regs[rd]} r{rs}={self.regs[rs]} r{rt}={self.regs[rt]}")
+                    if rd == 3 and rs == 3 and rt == 2:
+                        print(f"  → Factorial ADD detected! temp += result")
+                        self.add_128bit_array(self.temp_128bit, self.result_128bit)
+                        print(f"  → temp_128bit = {self.temp_128bit}")
+                    else:
+                        print(f"  → Skipped (condition not met)")
             elif func == 2:  # sub
                 self.regs[rd] = (self.regs[rs] - self.regs[rt]) & 0xFFFF
             elif func == 4:  # slt
@@ -355,19 +351,22 @@ class TinyBASU_Simulator:
             imm_s = self.sign_extend(imm, 6)
             self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
             # Factorial simulation: addi rx2, rx3, 0 (rx2 = rx3)
-            if self.is_factorial and rd == 2 and rs == 3 and imm_s == 0:
-                self.high2_64 = self.high3_64
-                self.low2_64 = self.low3_64
+            if self.is_factorial:
+                print(f"[ADDI] rd={rd}, rs={rs}, imm={imm}, imm_s={imm_s}")
+                if rd == 2 and rs == 3 and imm_s == 0:
+                    print(f"  → Factorial ADDI detected! result = temp")
+                    self.result_128bit = self.temp_128bit.copy()
+                    print(f"  → result_128bit = {self.result_128bit}")
         elif opcode == 2:  # li
-            self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF  
+            self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF
             # Factorial simulation
             if self.is_factorial:
-               if rd == 2:  # li rx2, ...
-                self.high2_64 = 0
-                self.low2_64 = self.regs[rd]
-               elif rd == 3:  # li rx3, ...
-                self.high3_64 = 0
-                self.low3_64 = self.regs[rd]
+                print(f"[LI] rd={rd}, value={self.regs[rd]}")
+                if rd == 3:  # ONLY rx3
+                    print(f"  → Reset temp_128bit")
+                    self.temp_128bit = [0] * 8
+                    self.temp_128bit[0] = self.regs[rd]
+                    print(f"  → temp_128bit = {self.temp_128bit}")
         elif opcode == 3:  # lui
             self.regs[rd] = (imm << 10) & 0xFFFF
         # load and store word
@@ -568,6 +567,8 @@ class TinyBASU_Simulator:
             # 128-bit Factorial result
             if self.is_factorial:
                 f.write("\n**********************128-bit Factorial Result********************\n")
-                f.write(f"High64: {self.high2_64:016X}\n")
-                f.write(f"Low64:  {self.low2_64:016X}\n")
-                f.write(f"Result (High|Low): {self.high2_64:016X}{self.low2_64:016X}\n")
+                hex_str = ""
+                for i in range(7, -1, -1):
+                    hex_str += f"{self.result_128bit[i]:04X}"
+                f.write(f"Result (128-bit): {hex_str}\n")
+                f.write(f"Array: {[f'{val:04X}' for val in reversed(self.result_128bit)]}\n")
