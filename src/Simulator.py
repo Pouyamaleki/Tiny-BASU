@@ -26,8 +26,11 @@ class TinyBASU_Simulator:
         self.wall_time = 0
         self.num_assembly_instr = 0
         # 128-bit result as array of 8 16-bit values
-        self.result_128bit = [0] * 8  # for rx2 (final result)
-        self.temp_128bit = [0] * 8    # for rx3 (intermediate)
+        # 128-bit result (two 64-bit words)
+        self.result_low64 = 1
+        self.result_high64 = 0
+        self.temp_low64 = 0
+        self.temp_high64 = 0
         self.is_factorial = False
 
     # assembler
@@ -258,9 +261,10 @@ class TinyBASU_Simulator:
         # if the program is testing Fact file set flag and reset 128-bit arrays
         if 'Fact' in inst_file or 'fact' in inst_file:
             self.is_factorial = True
-            self.result_128bit = [0] * 8
-            self.result_128bit[0] = 1      # rx2 = 1 initially
-            self.temp_128bit = [0] * 8
+            self.result_low64 = 1
+            self.result_high64 = 0
+            self.temp_low64 = 0
+            self.temp_high64 = 0
         else:
             self.is_factorial = False
             self.result_128bit = [0] * 8
