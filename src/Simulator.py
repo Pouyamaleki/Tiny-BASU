@@ -261,12 +261,16 @@ class TinyBASU_Simulator:
         # if the program is testing Fact file set flag and reset 128-bit variables
         if 'Fact' in inst_file or 'fact' in inst_file:
             self.is_factorial = True
-            self.high64 = 0
-            self.low64 = 0
+            self.high2_64 = 0
+            self.low2_64 = 1      # rx2 = 1 initially
+            self.high3_64 = 0
+            self.low3_64 = 0
         else:
             self.is_factorial = False
-            self.high64 = 0
-            self.low64 = 0
+            self.high2_64 = 0
+            self.low2_64 = 0
+            self.high3_64 = 0
+            self.low3_64 = 0
             
         # assemble the command file
         self.assemble_file(inst_file)
