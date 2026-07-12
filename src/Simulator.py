@@ -25,6 +25,9 @@ class TinyBASU_Simulator:
         self.labels = {}
         self.wall_time = 0
         self.num_assembly_instr = 0
+        # 128 bits registers for Fact 50 and 16 bits for others
+        self.register_width = 16
+        self.register_mask = 0xFFFF
 
     # assembler
     def parse_register(self, token):
