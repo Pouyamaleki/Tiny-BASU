@@ -566,9 +566,9 @@ class TinyBASU_Simulator:
             for i in range(8):
                 f.write(f"r{i}: {self.regs[i] & 0xFFFF:04X} ({self.regs[i]})\n")
             f.write(f"PC: {self.pc}\n")
-            # 128 bits result
+            # 128-bit Factorial result
             if self.is_factorial:
                 f.write("\n**********************128-bit Factorial Result********************\n")
-                f.write(f"High64: {self.high64:016X}\n")
-                f.write(f"Low64:  {self.low64:016X}\n")
-                f.write(f"Result (High|Low): {self.high64:016X}{self.low64:016X}\n")
+                f.write(f"High64: {self.high2_64:016X}\n")
+                f.write(f"Low64:  {self.low2_64:016X}\n")
+                f.write(f"Result (High|Low): {self.high2_64:016X}{self.low2_64:016X}\n")
