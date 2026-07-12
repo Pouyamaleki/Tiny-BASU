@@ -355,9 +355,10 @@ class TinyBASU_Simulator:
         elif opcode == 1:  # addi
             imm_s = self.sign_extend(imm, 6)
             self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
-            # if the program is using the fact file
-            if self.is_factorial and rd == 2:
-                self.add_to_128bit(self.regs[rd])
+            # Factorial simulation: addi rx2, rx3, 0 (rx2 = rx3)
+            if self.is_factorial and rd == 2 and rs == 3 and imm_s == 0:
+                self.high2_64 = self.high3_64
+                self.low2_64 = self.low3_64
         elif opcode == 2:  # li
             self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF  
             # Factorial simulation
