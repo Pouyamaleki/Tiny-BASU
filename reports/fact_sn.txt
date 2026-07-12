@@ -1,5 +1,5 @@
 ****************Simulation report of TinyBASU**************
-Simulator runtime: 0.0167 seconds
+Simulator runtime: 0.0009 seconds
 Number of Assembly Instructions: 12
 Prediction Method: SN
 Number of Cycles 2076
@@ -22,5 +22,6 @@ r7: 0000 (0)
 PC: 257
 
 **********************128-bit Factorial Result********************
+High64: 0000000000000000
+Low64 : 0000000000000000
 Result (128-bit): 00000000000000000000000000000000
-Array: ['0000', '0000', '0000', '0000', '0000', '0000', '0000', '0000']
