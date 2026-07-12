@@ -245,6 +245,8 @@ class TinyBASU_Simulator:
             else:
                 raise ValueError(f"Unknown Command: {mnemonic}")
 
+            if opcode == 0:
+                imm = func
             # make 16 bits machine code
             instr = (opcode << 12) | (rd << 9) | (rs << 6) | (rt << 3) | imm
             self.memory[address] = instr
