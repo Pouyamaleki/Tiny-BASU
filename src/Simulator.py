@@ -322,7 +322,10 @@ class TinyBASU_Simulator:
         if opcode == 0:
             func = imm
             if func == 1:  # add
-                self.regs[rd] = (self.regs[rs] + self.regs[rt]) & self.register_mask
+                self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF
+                # if the program is using the Fact file
+                if self.is_factorial and rd == 2:
+                    self.add_to_128bit(self.regs[rd])
             elif func == 2:  # sub
                 self.regs[rd] = (self.regs[rs] - self.regs[rt]) & self.register_mask
             elif func == 4:  # slt
@@ -339,7 +342,10 @@ class TinyBASU_Simulator:
         # I-type
         elif opcode == 1:  # addi
             imm_s = self.sign_extend(imm, 6)
-            self.regs[rd] = (self.regs[rs] + imm_s) & self.register_mask
+            self.regs[rd] = (self.regs[rs] + imm_s) & 0xFFFF
+            # if the program is using the fact file
+            if self.is_factorial and rd == 2:
+                self.add_to_128bit(self.regs[rd])
         elif opcode == 2:  # li
             self.regs[rd] = self.sign_extend(imm, 6) & self.register_mask
         elif opcode == 3:  # lui
