@@ -302,6 +302,14 @@ class TinyBASU_Simulator:
         if value & (1 << (bits - 1)):
             return value - (1 << bits)
         return value
+    
+    # a function for 128 bits sum operation 
+    def add_to_128bit(self, value):
+        self.low64 += value
+        # if overflow happened send high64 to carry
+        if self.low64 > 0xFFFFFFFFFFFFFFFF:
+            self.high64 += (self.low64 >> 64)
+            self.low64 &= 0xFFFFFFFFFFFFFFFF
 
     # execute the command
     def execute(self, opcode, rd, rs, rt, imm):
