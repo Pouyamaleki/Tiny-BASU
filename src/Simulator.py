@@ -254,6 +254,10 @@ class TinyBASU_Simulator:
 
     # initializing the memory
     def init_memory(self, inst_file, data_file):
+        # if the program is testing Fact file switch to 128 bits
+        if 'Fact' in inst_file or 'fact' in inst_file:
+            self.register_width = 128
+            self.register_mask = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF  # 128 bits
         # assemble the command file
         self.assemble_file(inst_file)
         
