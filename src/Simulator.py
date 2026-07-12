@@ -258,6 +258,7 @@ class TinyBASU_Simulator:
         if 'Fact' in inst_file or 'fact' in inst_file:
             self.register_width = 128
             self.register_mask = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF  # 128 bits
+            
         # assemble the command file
         self.assemble_file(inst_file)
         
