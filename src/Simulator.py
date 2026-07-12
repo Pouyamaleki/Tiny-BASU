@@ -327,18 +327,18 @@ class TinyBASU_Simulator:
                 if self.is_factorial and rd == 2:
                     self.add_to_128bit(self.regs[rd])
             elif func == 2:  # sub
-                self.regs[rd] = (self.regs[rs] - self.regs[rt]) & self.register_mask
+                self.regs[rd] = (self.regs[rs] - self.regs[rt]) & 0xFFFF
             elif func == 4:  # slt
                 self.regs[rd] = 1 if self.regs[rs] < self.regs[rt] else 0
             elif func == 3:  # mul
-                self.regs[rd] = (self.regs[rs] * self.regs[rt]) & self.register_mask
+                self.regs[rd] = (self.regs[rs] * self.regs[rt]) & 0xFFFF
             elif func == 5:  # div
                 if self.regs[rt] != 0:
                     self.regs[rd] = self.regs[rs] // self.regs[rt]
             elif func == 6:  # sll
-                self.regs[rd] = (self.regs[rs] << self.regs[rt]) & self.register_mask
+                self.regs[rd] = (self.regs[rs] << self.regs[rt]) & 0xFFFF
             elif func == 7:  # srl
-                self.regs[rd] = (self.regs[rs] >> self.regs[rt]) & self.register_mask
+                self.regs[rd] = (self.regs[rs] >> self.regs[rt]) & 0xFFFF
         # I-type
         elif opcode == 1:  # addi
             imm_s = self.sign_extend(imm, 6)
@@ -347,24 +347,24 @@ class TinyBASU_Simulator:
             if self.is_factorial and rd == 2:
                 self.add_to_128bit(self.regs[rd])
         elif opcode == 2:  # li
-            self.regs[rd] = self.sign_extend(imm, 6) & self.register_mask
+            self.regs[rd] = self.sign_extend(imm, 6) & 0xFFFF
         elif opcode == 3:  # lui
-            self.regs[rd] = (imm << 10) & self.register_mask
+            self.regs[rd] = (imm << 10) & 0xFFFF
         # load and store word
         elif opcode == 4:  # lw
             imm_s = self.sign_extend(imm, 6)
-            addr = (self.regs[rs] + imm_s) & self.register_mask
+            addr = (self.regs[rs] + imm_s) & 0xFFFF
             if 256 <= addr <= 511:
                 self.regs[rd] = self.memory[addr]
         elif opcode == 5:  # sw
             imm_s = self.sign_extend(imm, 6)
-            addr = (self.regs[rs] + imm_s) & self.register_mask
+            addr = (self.regs[rs] + imm_s) & 0xFFFF
             if 256 <= addr <= 511:
                 self.memory[addr] = self.regs[rd]
         elif opcode == 6:  # slli
-            self.regs[rd] = (self.regs[rs] << imm) & self.register_mask
+            self.regs[rd] = (self.regs[rs] << imm) & 0xFFFF
         elif opcode == 7:  # srli
-            self.regs[rd] = (self.regs[rs] >> imm) & self.register_mask
+            self.regs[rd] = (self.regs[rs] >> imm) & 0xFFFF
         elif opcode == 8:  # andi
             self.regs[rd] = self.regs[rs] & imm
         elif opcode == 9:  # ori
