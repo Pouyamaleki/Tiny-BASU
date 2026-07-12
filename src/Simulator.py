@@ -522,5 +522,8 @@ class TinyBASU_Simulator:
             f.write(f"Acceleration: {speedup:.4f}x\n")
             f.write("\n**********************Finall Registers********************\n")
             for i in range(8):
-                f.write(f"r{i}: {self.regs[i] & 0xFFFF:04X} ({self.regs[i]})\n")
+                if self.register_width == 16:
+                    f.write(f"r{i}: {self.regs[i] & self.register_mask:04X} ({self.regs[i]})\n")
+                else:
+                     f.write(f"r{i}: {self.regs[i] & self.register_mask:032X} ({self.regs[i]})\n")
             f.write(f"PC: {self.pc}\n")
