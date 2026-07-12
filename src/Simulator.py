@@ -267,8 +267,10 @@ class TinyBASU_Simulator:
             self.temp_high64 = 0
         else:
             self.is_factorial = False
-            self.result_128bit = [0] * 8
-            self.temp_128bit = [0] * 8
+            self.result_low64 = 0
+            self.result_high64 = 0
+            self.temp_low64 = 0
+            self.temp_high64 = 0
             
         # assemble the command file
         self.assemble_file(inst_file)
