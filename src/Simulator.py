@@ -329,7 +329,6 @@ class TinyBASU_Simulator:
         # R-type
         if opcode == 0:
             func = imm
-            print(f"opcode={opcode}, func={func}")
             if func == 1:  # add
                 self.regs[rd] = (self.regs[rs] + self.regs[rt]) & 0xFFFF  
                 # Factorial simulation: add rx3, rx3, rx2

@@ -1,5 +1,5 @@
 ****************Simulation report of TinyBASU**************
-Simulator runtime: 0.0024 seconds
+Simulator runtime: 0.0002 seconds
 Number of Assembly Instructions: 10
 Prediction Method: D2
 Number of Cycles 154
@@ -12,11 +12,11 @@ Acceleration: 1.4870x
 
 **********************Finall Registers********************
 r0: 0000 (0)
-r1: 0000 (0)
+r1: B228 (45608)
 r2: 001E (30)
 r3: 001E (30)
-r4: 0000 (0)
+r4: B228 (45608)
 r5: 0000 (0)
-r6: 0000 (0)
+r6: D8B5 (55477)
 r7: 0000 (0)
 PC: 257
