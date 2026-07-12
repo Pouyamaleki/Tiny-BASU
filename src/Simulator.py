@@ -314,9 +314,7 @@ class TinyBASU_Simulator:
             return value - (1 << bits)
         return value
     
-    # a function for 128 bits sum operation 
-    # 128-bit addition with carry handling
-    # a function for 128 bits sum operation
+    # 128-bit result using two 64-bit words
     def add_128bit(self, dst_low, dst_high, src_low, src_high):
         new_low = dst_low + src_low
         carry = 0
