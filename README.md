@@ -106,7 +106,7 @@ TinyBUSA/
 - **Memory**: Load/Store data (only for `lw`/`sw` instructions)
 - **Writeback**: Write result to register file
 
-**Branch Penalty:**  
+### Branch Penalty:  
 When a branch is taken (or mispredicted), the 3 instructions already fetched in the pipeline are flushed, causing a **3-cycle stall**.
 
 <br>
@@ -319,13 +319,16 @@ Each simulation run generates a comprehensive report with the following metrics:
   </tbody>
 </table>
 
+**Note:** For factorial calculations, the simulator also reports a **128-bit result** (`High64` and `Low64`)  
+to handle values larger than 16 bits, such as `50!`.
+
 <br>
 
 <a id="installation--usage"></a>
 ## 🚀 Installation & Usage
 
 ### Prerequisites
-- **Python 3.6+** (with standard library only)
+- **Python 3.6+** (with standard libraries)
 - No external dependencies required
 
 ### Running a Single Test
