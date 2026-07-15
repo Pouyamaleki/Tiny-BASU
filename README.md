@@ -2,7 +2,7 @@
 
 <a id="overview"></a>
 ## Overview
-A complete **5-stage pipeline processor simulator** for the **TinyBASU** architecture (a MIPS-like 16-bit processor) with **static and dynamic branch prediction** support. This project implements a full instruction set simulator (ISS) with built-in assembler, performance analysis tools, and automated batch testing for computer architecture education.
+TinyBASU is an educational instruction set simulator (ISS) that implements a MIPS-inspired 16-bit processor with a realistic 5-stage pipeline execution model. The simulator supports both static and dynamic branch prediction algorithms, includes a built-in assembler, provides detailed performance analysis, and enables automated batch execution for evaluating processor behavior and branch prediction strategies.
 
 ## 📋 Table of Contents
 - [Overview](#overview)
