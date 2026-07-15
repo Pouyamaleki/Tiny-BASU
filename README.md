@@ -1,4 +1,4 @@
-# 🖥️ TinyBASU instruction set simulator with a 5-stage pipeline execution model and branch prediction
+# 🖥️ TinyBASU – A MIPS-inspired 16-bit Pipeline Simulator
 
 <a id="overview"></a>
 ## Overview
@@ -24,10 +24,10 @@
 ## 📁 Project Structure
 
 ```
-TinyBUSA/
+TinyBASU/
 │
 ├── 📂 asm/
-│   ├── 📜fibonacci_bne_date.txt
+│   ├── 📜fibonacci_bne_data.txt
 │   ├── 📄fibonacci_bne.asm
 │   ├── 📜fibonacci_beq_data.txt
 │   ├── 📄fibonacci_beq.asm
@@ -333,12 +333,12 @@ to handle values larger than 16 bits, such as `50!`.
 
 ### Running a Single Test
 ```bash
-python main.py [timeout] [prediction_method] [inst_file] [data_file] [report_file]
+python src/main.py [timeout] [prediction_method] [inst_file] [data_file] [report_file]
 ```
 
 **Example:**
 ```bash
-python main.py 10000 ST asm/fibonacci_bne.asm data.txt Reports/fibo_bne_st.txt
+python src/main.py 10000 ST asm/fibonacci_bne.asm data.txt Reports/fibo_bne_st.txt
 ```
 
 **Arguments:**
